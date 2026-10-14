@@ -1,0 +1,1855 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Festie</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Festie">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,500&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap">
+<style>
+body{margin:0}
+*{scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{display:none;width:0;height:0}
+a{color:#0A0A0A}a:hover{color:#0A0A0A}
+input::placeholder,textarea::placeholder{color:rgba(10,10,10,0.55);opacity:1}
+.rp-strip{scrollbar-width:none}
+.rp-strip::-webkit-scrollbar{display:none}
+</style>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;background:#0A0A0A}
+#festie-stage{position:fixed;top:0;right:0;bottom:0;left:0;overflow:hidden}
+#festie-stage>div,#festie-stage>div>div{width:100%!important;height:100%!important;max-width:none!important}
+#festie-stage main{overflow-y:auto!important;-webkit-overflow-scrolling:touch}
+.app-mode .sb{height:max(44px, env(safe-area-inset-top))!important;box-sizing:border-box}
+.app-mode .sb>*{visibility:hidden}
+.app-mode nav[aria-label="메인 탭"]{padding-bottom:max(22px, env(safe-area-inset-bottom))!important}
+[role="button"]:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #0A0A0A;outline-offset:-2px}
+</style>
+<script>
+(function(){
+  var app = navigator.standalone || (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches));
+  if (app) document.documentElement.classList.add('app-mode');
+  window.__festieFit = function(){
+    var st=document.getElementById('festie-stage'); if(!st||!st.firstElementChild) return;
+    var scr=st.firstElementChild.firstElementChild;
+    if(scr){ var bg=getComputedStyle(scr).backgroundColor; document.documentElement.style.background=bg; document.body.style.background=bg; }
+  };
+})();
+</script>
+<script src="morphdom-umd.min.js"></script>
+<script src="festie-runtime.js"></script>
+</head>
+<body>
+<div id="festie-stage"></div>
+<template id="app-template">
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #F3D9FF">
+<sc-if value="{{is.prep}}" data-hint="{{ true }}">
+<div id="screen-prep" style="width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0">
+    <div style="display: flex; align-items: center; min-height: 44px; margin-bottom: 8px">
+      <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">MY FESTIVALS</span>
+    </div>
+
+    <section style="padding: 0 0 24px">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 6px">PREPARE</h1>
+      <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 2px; font-family: 'Noto Sans KR', sans-serif">
+        <span style="font-weight: 700; font-size: 16px; line-height: 1.4">{{prep.headline}}</span>
+        <span style="font-size: 13px; line-height: 1.4; color: rgba(10,10,10,0.72)">{{prep.sub}}</span>
+      </div>
+    </section>
+
+    <sc-if value="{{prep.added}}" data-hint="{{ false }}">
+    <div style="display: flex; flex-direction: column; border-bottom: 1.5px solid #0A0A0A">
+      <a role="button" tabindex="0" onClick="{{go.Dashboard}}" style="cursor: pointer; display: flex; align-items: center; gap: 16px; padding: 16px 0; border-top: 1.5px solid #0A0A0A; text-decoration: none">
+        <img src="images/poster_gmf.jpg" alt="" style="width: 60px; height: 80px; flex-shrink: 0; object-fit: cover; display: block; border: 1.5px solid #0A0A0A; box-sizing: border-box">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 7px; min-width: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; line-height: 1.1; text-transform: uppercase; padding-top: 2px">Grand Mint Festival 2026</span>
+          <span style="font-size: 13px; color: rgba(10,10,10,0.72)">Oct 17–18 · Olympic Park</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; align-self: stretch; justify-content: space-between">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.08em; line-height: 1.1; padding-top: 2px; color: {{prep.firstColor}}">{{prep.firstDday}}</span>
+          <span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+    </div>
+
+    <button type="button" onClick="{{go.DiscoverCarousel}}" style="margin-top: 20px; width: 100%; min-height: 64px; box-sizing: border-box; border: 0; background: transparent; color: #0A0A0A; display: flex; align-items: center; justify-content: center; gap: 14px; cursor: pointer; padding: 0 16px">
+      <span aria-hidden="true" style="width: 34px; height: 34px; box-sizing: border-box; border: 1.5px solid #0A0A0A; border-radius: 50%; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round"><path d="M12 4v16M4 12h16"></path></svg>
+      </span>
+      <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.14em; padding-top: 3px">ADD FESTIVAL</span>
+    </button>
+    </sc-if>
+    <sc-if value="{{prep.empty}}" data-hint="{{ true }}">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; border-top: 1.5px solid #0A0A0A; border-bottom: 1.5px solid #0A0A0A; padding: 32px 0">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M12 13v5M9.5 15.5h5"></path></svg>
+      <span style="font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 17px">첫 페스티벌을 기다리는 중</span>
+      <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 1.6; color: rgba(10,10,10,0.72)">탐색에서 마음에 드는 페스티벌을 고르면<br>여기서 준비를 시작할 수 있어요</span>
+    </div>
+    <div style="padding: 16px 0 20px; display: flex; flex-direction: column; gap: 6px">
+      <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; background: #0A0A0A; color: #F3D9FF; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em"><span style="padding-top: 3px">FIND FESTIVALS</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></a>
+      <button type="button" style="min-height: 48px; border: 0; background: transparent; color: #0A0A0A; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.14em"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span style="padding-top: 3px">직접 추가하기</span></button>
+    </div>
+    </sc-if>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #F3D9FF">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>    </a>
+  </nav>
+</div>
+</sc-if>
+<sc-if value="{{is.discover}}" data-hint="{{ false }}">
+<div id="screen-discover" style="width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 0 0 28px; min-height: 0; overflow-y: auto">
+    <div style="display: flex; align-items: center; min-height: 44px; margin-bottom: 8px">
+      <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">FESTIE</span>
+    </div>
+
+    <section style="padding: 0 28px 8px 0">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 6px">DISCOVER</h1>
+      <div style="margin-top: 18px; display: flex; align-items: center; gap: 10px; height: 56px; box-sizing: border-box; border: 1.5px solid #0A0A0A; background: transparent; padding: 0 16px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+        <label for="festival-search-c" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">페스티벌 검색</label>
+        <input id="festival-search-c" type="search" value="{{disc.query}}" onChange="{{disc.onQuery}}" placeholder="페스티벌, 도시, 장르 검색" style="flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; padding: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; color: #0A0A0A; outline-offset: 2px">
+      </div>
+    </section>
+
+    <sc-for list="{{disc.sections}}" as="sec" hint-placeholder-count="2">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; padding: 28px 28px 14px 0">
+        <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.02em; line-height: 0.95; padding-top: 4px">{{sec.title}}</h2>
+          <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 1.4; color: rgba(10,10,10,0.72)">{{sec.sub}}</span>
+        </div>
+      </div>
+      <ul aria-label="{{sec.title}}" style="list-style: none; margin: 0; padding: 0 28px 4px 0; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; flex-shrink: 0">
+        <sc-for list="{{sec.rows}}" as="f" hint-placeholder-count="2">
+          <li style="flex: 0 0 {{sec.cardW}}px; scroll-snap-align: start">
+            <a role="button" tabindex="0" onClick="{{f.go}}" aria-label="{{f.name}}" style="cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: space-between; height: {{sec.posterH}}px; box-sizing: border-box; background-color: #0A0A0A; color: #F3D9FF; text-decoration: none; overflow: hidden">
+              <img src="{{f.poster}}" alt="{{f.posterLabel}}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+              <span style="position: relative; z-index: 1; align-self: flex-start; margin: 14px 0 0 14px; background: #F3D9FF; color: #0A0A0A; padding: 5px 8px 3px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.1em">{{f.dday}}</span>
+              <div style="position: relative; z-index: 1; padding: 48px 14px 16px; background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,0.9) 55%); display: flex; flex-direction: column; gap: 8px">
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: {{sec.nameSize}}px; letter-spacing: -0.01em; line-height: 0.95; text-transform: uppercase; padding-top: 3px">{{f.name}}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+                  <span style="font-size: 12px; line-height: 1.4; color: rgba(243,217,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.meta}}</span>
+                  <span aria-hidden="true" style="flex-shrink: 0; display: flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+                </div>
+              </div>
+            </a>
+          </li>
+        </sc-for>
+      </ul>
+    </sc-for>
+
+    <sc-if value="{{disc.empty}}" data-hint="{{ false }}">
+      <div style="padding: 32px 28px 32px 0; display: flex; flex-direction: column; gap: 4px; font-family: 'Noto Sans KR', sans-serif">
+        <span style="font-weight: 700; font-size: 14px">검색 결과가 없어요</span>
+        <span style="font-size: 13px; color: rgba(10,10,10,0.72)">다른 페스티벌 이름이나 도시, 장르로 찾아봐요</span>
+      </div>
+    </sc-if>
+    <div style="height: 24px; flex-shrink: 0"></div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #F3D9FF">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>
+    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>
+    </a>
+  </nav>
+</div>
+</sc-if>
+<sc-if value="{{is.detail}}" data-hint="{{ false }}">
+<div id="screen-detail" style="width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+    <section style="position: relative; height: 430px; flex-shrink: 0; background-color: #0A0A0A; color: #F3D9FF; display: flex; flex-direction: column; overflow: hidden">
+      <img src="images/poster_gmf.jpg" alt="Grand Mint Festival 2026 포스터" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+      <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0) 20%, rgba(10,10,10,0.35) 42%, rgba(10,10,10,0.94) 100%)"></div>
+    <div class="sb" style="position: relative; z-index: 1; height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px; color: #F3D9FF">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#F3D9FF"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#F3D9FF"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#F3D9FF"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#F3D9FF" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#F3D9FF"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#F3D9FF"></rect>
+    </svg>
+  </div>
+
+
+      <div style="position: relative; z-index: 1; padding: 12px 28px 0; display: flex; justify-content: space-between; align-items: center">
+        <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" aria-label="탐색으로 돌아가기" style="cursor: pointer; display: flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.12em; color: #F3D9FF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg><span style="padding-top: 3px">DISCOVER</span></a>
+      </div>
+      <div style="position: relative; z-index: 1; margin-top: auto; padding: 0 28px 26px; display: flex; flex-direction: column">
+        <span style="align-self: flex-start; background: #F3D9FF; color: #0A0A0A; padding: 5px 9px 3px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.1em">D-4</span>
+        <span style="margin-top: 14px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.2em; color: rgba(243,217,255,0.8); padding-top: 2px">INDIE · SEOUL · OCT 17–18</span>
+        <h1 style="margin: 14px 0 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 44px; letter-spacing: -0.02em; line-height: 0.9; text-transform: uppercase; padding-top: 6px">Grand Mint<br>Festival 2026</h1>
+        <span style="margin-top: 14px; font-size: 13px; color: rgba(243,217,255,0.8)">Olympic Park, Seoul</span>
+      </div>
+    </section>
+
+    <div style="padding: 0 28px 24px; display: flex; flex-direction: column">
+    <section>
+      <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 24px 0 16px">
+        <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em; padding-top: 2px">LINE-UP</h2>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72)">48 ARTISTS</span>
+      </div>
+      <ul style="list-style: none; margin: 0 -28px 0 0; padding: 0 28px 4px 0; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none">
+          <li style="flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <img src="images/artists_leesora.jpg" alt="이소라" style="width: 76px; height: 76px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; object-fit: cover; display: block; flex-shrink: 0">
+            <span style="font-weight: 600; font-size: 13px; line-height: 1.2">이소라</span>
+          </li>
+          <li style="flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <img src="images/artists_janggiha.jpg" alt="장기하" style="width: 76px; height: 76px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; object-fit: cover; display: block; flex-shrink: 0">
+            <span style="font-weight: 600; font-size: 13px; line-height: 1.2">장기하</span>
+          </li>
+          <li style="flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <img src="images/artists_yoonha.jpg" alt="윤하" style="width: 76px; height: 76px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; object-fit: cover; display: block; flex-shrink: 0">
+            <span style="font-weight: 600; font-size: 13px; line-height: 1.2">윤하</span>
+          </li>
+          <li style="flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <img src="images/artists_sipran.jpg" alt="십란" style="width: 76px; height: 76px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; object-fit: cover; display: block; flex-shrink: 0">
+            <span style="font-weight: 600; font-size: 13px; line-height: 1.2">십란</span>
+          </li>
+          <li style="flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+            <a href="#" aria-label="아티스트 44팀 더 보기" style="width: 76px; height: 76px; box-sizing: border-box; border-radius: 50%; background: #0A0A0A; color: #F3D9FF; display: flex; align-items: center; justify-content: center; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; padding-top: 3px">+44</a>
+            <span style="font-weight: 600; font-size: 13px; line-height: 1.2">더 보기</span>
+          </li>
+      </ul>
+    </section>
+
+    <section>
+      <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 28px 0 16px">
+        <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em; padding-top: 2px">INFO</h2>
+      </div>
+      <div style="border: 1.5px solid #0A0A0A; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+        <div style="min-width: 0; min-height: 124px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; padding: 16px; border-right: 1.5px solid #0A0A0A; border-bottom: 1.5px solid #0A0A0A">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">DATE</span>
+            <span style="font-weight: 700; font-size: 15px; line-height: 1.3">Oct 17 – 18<br>2 DAYS</span>
+          </div>
+        </div>
+        <div style="min-width: 0; min-height: 124px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; padding: 16px; border-bottom: 1.5px solid #0A0A0A">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"></path><circle cx="12" cy="10" r="2.3"></circle></svg>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">VENUE</span>
+            <span style="font-weight: 700; font-size: 15px; line-height: 1.3">올림픽공원<br>서울 송파구</span>
+          </div>
+        </div>
+        <div style="min-width: 0; min-height: 124px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; padding: 16px; border-right: 1.5px solid #0A0A0A">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5Z"></path><path d="M15 6v12" stroke-dasharray="2 2"></path></svg>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">TICKET</span>
+            <span style="font-weight: 700; font-size: 15px; line-height: 1.3">1일권<br>132,000원</span>
+          </div>
+        </div>
+        <div style="min-width: 0; min-height: 124px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; padding: 16px; ">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="3" width="12" height="18" rx="1"></rect><circle cx="12" cy="14.5" r="3.2"></circle><circle cx="12" cy="7.5" r="1.3"></circle></svg>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">STAGE</span>
+            <span style="font-weight: 700; font-size: 15px; line-height: 1.3">3개 스테이지</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <div style="flex-shrink: 0">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <sc-if value="{{det.notAdded}}" data-hint="{{ true }}">
+        <button type="button" onClick="{{det.add}}" style="width: 100%; min-height: 92px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 18px 22px; border: 0; background: #0A0A0A; color: #F3D9FF; cursor: pointer; text-align: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F3D9FF" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          <span style="font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 18px">준비 탭에 추가하기</span>
+        </button>
+      </sc-if>
+      <sc-if value="{{det.added}}" data-hint="{{ false }}">
+        <a role="button" tabindex="0" onClick="{{go.Main}}" role="status" style="cursor: pointer; min-height: 92px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 28px 22px; border-top: 1.5px solid #0A0A0A; text-decoration: none; color: #0A0A0A">
+          <span style="display: flex; align-items: center; gap: 12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+            <span style="font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 15px">준비 탭에 담겼어요</span>
+          </span>
+          <span style="display: flex; align-items: center; gap: 6px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px">보러 가기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+        </a>
+      </sc-if>
+    </div>
+  </div>
+
+</div>
+</sc-if>
+<sc-if value="{{is.dash}}" data-hint="{{ false }}">
+<div id="screen-dash" style="width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0">
+    <div style="display: flex; align-items: center; min-height: 44px; margin-bottom: 8px">
+      <a role="button" tabindex="0" onClick="{{go.Main}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #0A0A0A"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">PREPARE</span></a>
+    </div>
+
+    <section style="padding: 0 0 4px">
+      <div style="display: flex; align-items: flex-end; gap: 16px">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 6px; flex-shrink: 0">D-4</span>
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 2px; min-width: 0">
+          <span style="font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.35">그민페까지 딱 4일!</span>
+          <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 1.4; color: rgba(10,10,10,0.72)">{{dash.sub}}</span>
+        </div>
+      </div>
+      <h1 style="margin: 18px 0 4px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.01em; line-height: 1.05; text-transform: uppercase">Grand Mint<br>Festival 2026</h1>
+      <span style="font-size: 13px; line-height: 1.6; color: rgba(10,10,10,0.72)">Oct 17–18 · Olympic Park, Seoul</span>
+    </section>
+
+    <div style="margin-top: 20px; border: 1.5px solid #0A0A0A; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+      <a role="button" tabindex="0" onClick="{{dash.openTT}}" style="cursor: pointer; min-width: 0; min-height: 196px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; border-right: 1.5px solid #0A0A0A; border-bottom: 1.5px solid #0A0A0A; text-decoration: none; color: #0A0A0A">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin: -3px 0 0 -3px"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path><path d="M12 13v3.5l2.2 1.3"></path></svg>
+          <span aria-hidden="true" style="display: flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <sc-if value="{{dash.ttEmpty}}" data-hint="{{ false }}"><span style="align-self: flex-start; background: #0A0A0A; color: #F3D9FF; padding: 4px 8px 2px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.14em">NOT SET YET</span></sc-if><span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em; padding-top: 3px">TIMETABLE</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: #0A0A0A">{{dash.ttLabel}}</span>
+        </div>
+      </a>
+      <a role="button" tabindex="0" onClick="{{go.Playlist}}" style="cursor: pointer; min-width: 0; min-height: 196px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; border-bottom: 1.5px solid #0A0A0A; text-decoration: none; color: #0A0A0A">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin: -3px 0 0 -3px"><path d="M9 18V5l11-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="17" cy="16" r="3"></circle></svg>
+          <span aria-hidden="true" style="display: flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em; padding-top: 3px">PLAYLIST</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72)">{{dash.plLabel}}</span>
+        </div>
+      </a>
+      <a role="button" tabindex="0" onClick="{{go.Checklist}}" style="cursor: pointer; min-width: 0; min-height: 196px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; border-right: 1.5px solid #0A0A0A; text-decoration: none; color: #0A0A0A">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin: -3px 0 0 -3px"><path d="M4 6.5l2 2 3.5-3.5"></path><path d="M4 13.5l2 2 3.5-3.5"></path><path d="M13 7h7M13 14h7M4 20h16"></path></svg>
+          <span aria-hidden="true" style="display: flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em; padding-top: 3px">CHECKLIST</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72)">{{dash.chkLabel}}</span>
+        </div>
+      </a>
+      <a href="#" style="min-width: 0; min-height: 196px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; ; text-decoration: none; color: #0A0A0A">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; margin: -3px 0 0 -3px"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5Z"></path><path d="M15 6v12" stroke-dasharray="2 2"></path></svg>
+          <span aria-hidden="true" style="display: flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em; padding-top: 3px">TICKET</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72)">2 DAYS · QR</span>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #F3D9FF">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>    </a>
+  </nav>
+</div>
+</sc-if>
+<sc-if value="{{is.tt}}" data-hint="{{ false }}">
+<div id="screen-tt" style="width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <a role="button" tabindex="0" onClick="{{go.Dashboard}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #0A0A0A"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">GRAND MINT FESTIVAL</span></a>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: flex-start; margin: 4px 0 8px">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 40px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 4px">TIMETABLE</h1>
+      <div style="position: relative; margin-top: 16px; align-self: stretch">
+        <button type="button" aria-haspopup="listbox" aria-expanded="{{tt.openAttr}}" aria-label="공연 날짜 선택" onClick="{{tt.toggleOpen}}" style="width: 100%; height: 54px; box-sizing: border-box; display: flex; align-items: stretch; padding: 0; border: 1.5px solid #0A0A0A; background: transparent; color: #0A0A0A; cursor: pointer; text-align: left">
+          <span style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 0 16px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.08em; padding-top: 3px">{{tt.curLabel}}</span>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.08em; color: rgba(10,10,10,0.72); padding-top: 3px">{{tt.curDate}}</span>
+          </span>
+          <span style="width: 52px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-left: 1.5px solid #0A0A0A">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{tt.chevron}}deg)"><path d="M6 9l6 6 6-6"></path></svg>
+          </span>
+        </button>
+        <sc-if value="{{tt.open}}" data-hint="{{ false }}">
+          <div role="listbox" aria-label="공연 날짜" style="position: absolute; top: calc(100% - 1.5px); left: 0; right: 0; box-sizing: border-box; border: 1.5px solid #0A0A0A; background: #F3D9FF; z-index: 20; display: flex; flex-direction: column">
+            <sc-for list="{{tt.days}}" as="d" hint-placeholder-count="2">
+              <button type="button" role="option" aria-selected="{{d.selected}}" onClick="{{d.pick}}" style="min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 16px 0 48px; border: 0; border-top: {{d.divider}}; background: {{d.bg}}; color: {{d.fg}}; cursor: pointer; text-align: left; white-space: nowrap; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.08em">
+                <span style="padding-top: 3px">{{d.label}}</span>
+                <span style="padding-top: 3px; font-weight: 600; letter-spacing: 0.06em">{{d.date}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="margin-top: 4px; border: 1.5px solid #0A0A0A; display: flex; flex-direction: column">
+    <div style="background: #0A0A0A; color: #F3D9FF; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 16px 18px 14px">
+      <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.2em">MY ROUTE</span>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.02em; line-height: 1">{{tt.span}}</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 44px; letter-spacing: -0.03em; line-height: 0.8; padding-top: 4px">{{tt.count}}</span>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.16em; line-height: 1">PICKS</span>
+      </div>
+    </div>
+
+    <sc-if value="{{tt.hasPicks}}" data-hint="{{ true }}">
+      <div style="display: flex; flex-direction: column; padding: 8px 16px 12px">
+        <sc-for list="{{tt.rows}}" as="r" hint-placeholder-count="5">
+          <sc-if value="{{r.isSet}}" data-hint="{{ true }}">
+            <div style="display: grid; grid-template-columns: 52px 24px minmax(0, 1fr); min-height: 72px">
+              <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 14px">
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.02em">{{r.start}}</span>
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: rgba(10,10,10,0.72)">– {{r.end}}</span>
+              </div>
+              <div style="position: relative">
+                <span style="position: absolute; left: 11.25px; top: {{r.lt}}; bottom: {{r.lb}}; border-left: 1.5px solid #0A0A0A"></span>
+                <span style="position: absolute; left: 7px; top: 17px; width: 10px; height: 10px; border-radius: 50%; background: #0A0A0A"></span>
+              </div>
+              <div style="padding: 13px 0 16px 6px; display: flex; flex-direction: column; gap: 5px; min-width: 0">
+                <span style="font-weight: 600; font-size: 17px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72)">{{r.stage}}</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{r.isGap}}" data-hint="{{ false }}">
+            <div style="display: grid; grid-template-columns: 52px 24px minmax(0, 1fr); min-height: 40px">
+              <span></span>
+              <div style="position: relative">
+                <span style="position: absolute; left: 11.25px; top: 0; bottom: 0; border-left: 1.5px dashed #0A0A0A"></span>
+              </div>
+              <div style="display: flex; align-items: center; padding-left: 6px">
+                <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; color: rgba(10,10,10,0.72)">{{r.text}}</span>
+              </div>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{tt.empty}}" data-hint="{{ false }}">
+      <div style="padding: 28px 16px 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px">
+        <span style="font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 14px">아직 고른 공연이 없어요</span>
+        <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72)">아래 EDIT TIMETABLE에서 보고 싶은 공연을 골라보세요</span>
+      </div>
+    </sc-if>
+    <a role="button" tabindex="0" onClick="{{go.TimetableEdit}}" style="cursor: pointer; border-top: 1.5px solid #0A0A0A; min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 16px; text-decoration: none; color: #0A0A0A">
+      <span style="display: flex; align-items: center; gap: 10px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"></path><path d="M14 7l3 3"></path></svg>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.18em; padding-top: 3px">EDIT TIMETABLE</span>
+      </span>
+      <span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+    </a>
+    </div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #F3D9FF">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>
+    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>
+    </a>
+  </nav>
+</div>
+</sc-if>
+<sc-if value="{{is.tte}}" data-hint="{{ false }}">
+<div id="screen-tte" style="width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0">
+    <div style="display: flex; align-items: center">
+      <a role="button" tabindex="0" onClick="{{go.Timetable}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #0A0A0A"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">MY TIMETABLE</span></a>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: flex-start; margin: 0 0 10px">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 4px; white-space: nowrap">EDIT TIMETABLE</h1>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 2px; font-family: 'Noto Sans KR', sans-serif">
+        <span style="font-weight: 700; font-size: 16px; line-height: 1.4">보고 싶은 공연을 탭해서 체크하세요</span>      </div>
+      <div style="position: relative; margin-top: 12px; align-self: stretch">
+        <button type="button" aria-haspopup="listbox" aria-expanded="{{tte.openAttr}}" aria-label="공연 날짜 선택" onClick="{{tte.toggleOpen}}" style="width: 100%; height: 48px; box-sizing: border-box; display: flex; align-items: stretch; padding: 0; border: 1.5px solid #0A0A0A; background: transparent; color: #0A0A0A; cursor: pointer; text-align: left">
+          <span style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 0 16px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.08em; padding-top: 3px">{{tte.curLabel}}</span>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.08em; color: rgba(10,10,10,0.72); padding-top: 3px">{{tte.curDate}}</span>
+          </span>
+          <span style="width: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-left: 1.5px solid #0A0A0A">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{tte.chevron}}deg)"><path d="M6 9l6 6 6-6"></path></svg>
+          </span>
+        </button>
+        <sc-if value="{{tte.open}}" data-hint="{{ false }}">
+          <div role="listbox" aria-label="공연 날짜" style="position: absolute; top: calc(100% - 1.5px); left: 0; right: 0; box-sizing: border-box; border: 1.5px solid #0A0A0A; background: #F3D9FF; z-index: 20; display: flex; flex-direction: column">
+            <sc-for list="{{tte.days}}" as="d" hint-placeholder-count="2">
+              <button type="button" role="option" aria-selected="{{d.selected}}" onClick="{{d.pick}}" style="min-height: 50px; display: flex; align-items: center; gap: 12px; padding: 0 16px 0 48px; border: 0; border-top: {{d.divider}}; background: {{d.bg}}; color: {{d.fg}}; cursor: pointer; text-align: left; white-space: nowrap; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.08em">
+                <span style="padding-top: 3px">{{d.label}}</span>
+                <span style="padding-top: 3px; font-weight: 600; letter-spacing: 0.06em">{{d.date}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 38px repeat(2, minmax(0, 1fr)); border-top: 1.5px solid #0A0A0A; border-bottom: 1.5px solid #0A0A0A">
+      <span style="display: flex; align-items: flex-end; padding-bottom: 9px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; color: rgba(10,10,10,0.72)">TIME</span>
+      <div style="border-left: 1.5px solid #0A0A0A; padding: 8px 8px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; color: rgba(10,10,10,0.72); padding-top: 2px">STAGE 01</span>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.06em">MINT BREEZE</span>
+      </div>
+      <div style="border-left: 1.5px solid #0A0A0A; padding: 8px 8px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; color: rgba(10,10,10,0.72); padding-top: 2px">STAGE 02</span>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.06em">MIDNIGHT SUNSET</span>
+      </div>
+    </div>
+
+    <div style="position: relative; display: grid; grid-template-columns: 38px repeat(2, minmax(0, 1fr)); height: 376px; flex-shrink: 0; box-sizing: border-box; padding: 8px 0">
+      <div aria-hidden="true" style="position: absolute; inset: 0">
+        <sc-for list="{{tte.hours}}" as="h" hint-placeholder-count="7">
+          <div style="position: absolute; left: 0; right: 0; top: {{h.top}}px; height: 0">
+            <span style="position: absolute; left: 0; top: -5px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; color: rgba(10,10,10,0.72)">{{h.label}}</span>
+            <span style="position: absolute; left: 38px; right: 0; top: 0; border-top: 1px solid rgba(10,10,10,0.3)"></span>
+          </div>
+        </sc-for>
+      </div>
+      <span></span>
+      <div style="position: relative; border-left: 1.5px solid #0A0A0A; margin: -8px 0; padding: 8px 0">
+        <sc-for list="{{tte.mainSets}}" as="s" hint-placeholder-count="5">
+          <button type="button" role="checkbox" aria-checked="{{s.pressed}}" onClick="{{s.toggle}}" style="position: absolute; left: 4px; right: 4px; top: {{s.top}}px; height: {{s.h}}px; box-sizing: border-box; border: 1.5px solid #0A0A0A; background: {{s.bg}}; color: {{s.fg}}; padding: 8px 9px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; cursor: pointer; overflow: hidden">
+            <span style="font-weight: 700; font-size: 14px; line-height: 1.2; max-width: calc(100% - 26px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.name}}</span>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.04em; color: {{s.sub}}">{{s.time}}</span>
+            <sc-if value="{{s.picked}}" data-hint="{{ false }}">
+              <span aria-hidden="true" style="position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border-radius: 50%; background: #F3D9FF; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+            </sc-if>
+            <sc-if value="{{s.notPicked}}" data-hint="{{ true }}">
+              <span aria-hidden="true" style="position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; background: transparent"></span>
+            </sc-if>
+            <sc-if value="{{s.conflict}}" data-hint="{{ false }}">
+              <span style="margin-top: auto; border: 1px solid #F3D9FF; padding: 1px 6px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 10px; line-height: 1.3">겹침</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <div style="position: relative; border-left: 1.5px solid #0A0A0A; margin: -8px 0; padding: 8px 0">
+        <sc-for list="{{tte.s2Sets}}" as="s" hint-placeholder-count="4">
+          <button type="button" role="checkbox" aria-checked="{{s.pressed}}" onClick="{{s.toggle}}" style="position: absolute; left: 4px; right: 4px; top: {{s.top}}px; height: {{s.h}}px; box-sizing: border-box; border: 1.5px solid #0A0A0A; background: {{s.bg}}; color: {{s.fg}}; padding: 8px 9px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; cursor: pointer; overflow: hidden">
+            <span style="font-weight: 700; font-size: 14px; line-height: 1.2; max-width: calc(100% - 26px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.name}}</span>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.04em; color: {{s.sub}}">{{s.time}}</span>
+            <sc-if value="{{s.picked}}" data-hint="{{ false }}">
+              <span aria-hidden="true" style="position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border-radius: 50%; background: #F3D9FF; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+            </sc-if>
+            <sc-if value="{{s.notPicked}}" data-hint="{{ true }}">
+              <span aria-hidden="true" style="position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; background: transparent"></span>
+            </sc-if>
+            <sc-if value="{{s.conflict}}" data-hint="{{ false }}">
+              <span style="margin-top: auto; border: 1px solid #F3D9FF; padding: 1px 6px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 10px; line-height: 1.3">겹침</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="margin-top: auto; padding: 8px 0 0; display: flex; flex-direction: column">
+      <div role="status" aria-live="polite" style="margin: 0 -28px; min-height: 64px; box-sizing: border-box; display: flex; align-items: center; gap: 14px; padding: 0 28px; border-top: 1.5px solid #0A0A0A; background: #F3D9FF">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.03em; line-height: 0.8; padding-top: 6px; min-width: 22px">{{tte.pickCount}}</span>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.18em; padding-top: 2px">PICKS · {{tte.curLabel}}</span>
+          <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{tte.pickSummary}}</span>
+        </div>
+        <sc-if value="{{tte.hasConflict}}" data-hint="{{ false }}">
+          <span style="flex-shrink: 0; display: flex; align-items: center; gap: 6px; background: #0A0A0A; color: #F3D9FF; padding: 7px 10px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 12px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19z"></path><path d="M12 10v4.5M12 17.5v.01"></path></svg>겹침 {{tte.conflictCount}}건</span>
+        </sc-if>
+      </div>
+      <a role="button" tabindex="0" onClick="{{go.Timetable}}" style="cursor: pointer; margin: 0 -28px; min-height: 88px; box-sizing: border-box; padding-bottom: 22px; display: flex; align-items: center; justify-content: center; background: #0A0A0A; color: #F3D9FF; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em"><span style="padding-top: 3px">DONE</span></a>
+    </div>
+  </main>
+</div>
+</sc-if>
+<sc-if value="{{is.check}}" data-hint="{{ false }}">
+<div id="screen-check" style="position: relative; width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 16px; min-height: 0">
+    <div style="display: flex; align-items: center; min-height: 44px">
+      <a role="button" tabindex="0" onClick="{{go.Dashboard}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #0A0A0A"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">GRAND MINT FESTIVAL</span></a>
+    </div>
+
+    <div style="display: flex; flex-direction: column; margin: 4px 0 16px">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 40px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 4px">CHECKLIST</h1>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 2px; font-family: 'Noto Sans KR', sans-serif">
+        <span style="font-weight: 700; font-size: 16px; line-height: 1.4">{{chk.headline}}</span>
+        <span style="font-size: 13px; line-height: 1.4; color: rgba(10,10,10,0.72)">{{chk.subline}}</span>
+      </div>
+    </div>
+
+    <div style="flex: 1; min-height: 0; border: 1.5px solid #0A0A0A; display: flex; flex-direction: column">
+      <div style="background: #0A0A0A; color: #F3D9FF; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; padding: 16px 18px 14px; flex-shrink: 0">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.2em">PACKING LIST</span>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div role="progressbar" aria-label="챙긴 비율" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{chk.pct}}" style="flex: 1; height: 6px; background: rgba(243,217,255,0.25)">
+              <div style="width: {{chk.pct}}%; height: 100%; background: #F3D9FF"></div>
+            </div>
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; padding-top: 2px; min-width: 34px; text-align: right">{{chk.pct}}%</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 44px; letter-spacing: -0.03em; line-height: 0.8; padding-top: 4px">{{chk.done}}</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.16em; line-height: 1">/ {{chk.total}} PACKED</span>
+        </div>
+      </div>
+
+      <div style="flex: 1; min-height: 0; overflow-y: auto">
+        <sc-for list="{{chk.cats}}" as="c" hint-placeholder-count="3">
+          <section style="border-top: {{c.divider}}; padding: 12px 16px 4px">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 6px">
+              <span style="display: flex; align-items: baseline; gap: 8px">
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.18em; padding-top: 2px">{{c.en}}</span>
+                <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; color: rgba(10,10,10,0.72)">{{c.ko}}</span>
+              </span>
+              <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72); padding-top: 2px">{{c.done}}/{{c.total}}</span>
+            </div>
+            <sc-for list="{{c.items}}" as="it" hint-placeholder-count="4">
+              <button type="button" role="checkbox" aria-checked="{{it.checkedAttr}}" onClick="{{it.toggle}}" style="width: 100%; min-height: 50px; display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; gap: 6px; padding: 0; border: 0; border-top: 1px solid rgba(10,10,10,0.15); background: transparent; color: #0A0A0A; cursor: pointer; text-align: left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{it.stroke}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+                <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: {{it.weight}}; color: {{it.color}}; text-decoration: {{it.deco}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.label}}</span>
+              </button>
+            </sc-for>
+          </section>
+        </sc-for>
+      </div>
+
+      <div style="border-top: 1.5px solid #0A0A0A; display: flex; align-items: center; min-height: 58px; background: transparent; flex-shrink: 0">
+        <span aria-hidden="true" style="padding-left: 16px; display: flex; align-items: center; color: #0A0A0A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg></span>
+        <label for="new-item" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">챙길 것 추가</label>
+        <input id="new-item" type="text" value="{{chk.draft}}" onChange="{{chk.onDraft}}" onKeyDown="{{chk.onKey}}" placeholder="챙길 것 추가하기" style="flex: 1; min-width: 0; height: 58px; box-sizing: border-box; border: 0; background: transparent; padding: 0 12px; font-family: 'Noto Sans KR', sans-serif; font-size: 16px; color: #0A0A0A; outline-offset: -3px">
+        <button type="button" onClick="{{chk.addItem}}" style="height: 58px; min-width: 80px; border: 0; border-left: 1.5px solid #0A0A0A; background: #0A0A0A; color: #F3D9FF; cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em"><span style="padding-top: 3px">ADD</span></button>
+      </div>
+    </div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #F3D9FF">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>
+    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>
+    </a>
+  </nav>
+</div>
+</sc-if>
+<sc-if value="{{is.playlist}}" data-hint="{{ false }}">
+<div id="screen-playlist" style="position: relative; width: 390px; height: 844px; box-sizing: border-box; background: #F3D9FF; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0">
+    <div style="display: flex; align-items: center; min-height: 44px">
+      <a role="button" tabindex="0" onClick="{{go.Dashboard}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #0A0A0A"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">GRAND MINT FESTIVAL</span></a>
+    </div>
+
+    <div style="display: flex; flex-direction: column; margin: 4px 0 16px">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 40px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 4px">PLAYLIST</h1>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 2px; font-family: 'Noto Sans KR', sans-serif">
+        <span style="font-weight: 700; font-size: 16px; line-height: 1.4">{{pl.headline}}</span>
+        <span style="font-size: 13px; line-height: 1.4; color: rgba(10,10,10,0.72)">최근 공연 셋리스트를 바탕으로 자동 생성돼요</span>
+      </div>
+    </div>
+
+    <div style="flex: 1; min-height: 0; border: 1.5px solid #0A0A0A; display: flex; flex-direction: column">
+      <div style="background: #0A0A0A; color: #F3D9FF; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 16px 18px 14px; flex-shrink: 0">
+        <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+          <span style="display: flex; align-items: center; gap: 8px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.2em">
+            <span style="padding-top: 2px">AUTO PLAYLIST</span>
+          </span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.02em; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">GMF 2026</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 44px; letter-spacing: -0.03em; line-height: 0.8; padding-top: 4px">{{pl.trackCount}}</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.16em; line-height: 1">TRACKS</span>
+        </div>
+      </div>
+
+      <div style="flex: 1; min-height: 0; overflow-y: auto">
+        <sc-for list="{{pl.groups}}" as="g" hint-placeholder-count="3">
+          <section style="border-top: {{g.divider}}; padding: 14px 16px 6px">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; padding-bottom: 8px">
+              <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                <span style="font-weight: 600; font-size: 16px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{g.artist}}</span>
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{g.when}}</span>
+              </div>
+              <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72); flex-shrink: 0">{{g.count}} TRACKS</span>
+            </div>
+            <ol style="list-style: none; margin: 0; padding: 0">
+              <sc-for list="{{g.tracks}}" as="t" hint-placeholder-count="3">
+                <li style="display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 6px; min-height: 38px; border-top: 1px solid rgba(10,10,10,0.15)">
+                  <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; color: rgba(10,10,10,0.72); padding-top: 2px">{{t.no}}</span>
+                  <span style="font-weight: 500; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.title}}</span>
+                  <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72); padding-top: 2px">{{t.tag}}</span>
+                </li>
+              </sc-for>
+            </ol>
+            <sc-if value="{{g.hasMore}}" data-hint="{{ true }}">
+              <button type="button" aria-expanded="{{g.expandedAttr}}" onClick="{{g.toggle}}" style="width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-top: 1px solid rgba(10,10,10,0.15); background: transparent; color: #0A0A0A; cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em">
+                <span style="padding-top: 2px">{{g.moreLabel}}</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{g.chevron}}deg)"><path d="M6 9l6 6 6-6"></path></svg>
+              </button>
+            </sc-if>
+          </section>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding: 12px 0 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
+      <sc-if value="{{pl.exported}}" data-hint="{{ false }}">
+        <div role="status" style="display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+          <span>{{pl.exportedTo}}(으)로 내보냈어요</span>
+        </div>
+      </sc-if>
+      <button type="button" aria-haspopup="dialog" onClick="{{pl.openSheet}}" style="min-height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 0; background: #0A0A0A; color: #F3D9FF; cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F3D9FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"></path><path d="M7 8l5-5 5 5"></path><path d="M4 14v6h16v-6"></path></svg>
+        <span style="padding-top: 3px">EXPORT PLAYLIST</span>
+      </button>
+    </div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #F3D9FF">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>
+    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(243,217,255,0.65)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>
+    </a>
+  </nav>
+
+  <sc-if value="{{pl.sheetOpen}}" data-hint="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end">
+      <button type="button" aria-label="내보내기 닫기" onClick="{{pl.closeSheet}}" style="position: absolute; inset: 0; border: 0; padding: 0; background: rgba(10,10,10,0.45); cursor: pointer"></button>
+      <div role="dialog" aria-label="플레이리스트 내보내기" style="position: relative; background: #F3D9FF; border-top: 1.5px solid #0A0A0A; padding: 22px 28px 34px; display: flex; flex-direction: column">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.2em; color: rgba(10,10,10,0.72)">EXPORT TO</span>
+        <span style="margin-top: 6px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 18px">어디로 내보낼까요?</span>
+        <span style="margin-top: 2px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72)">{{pl.trackCount}}곡이 새 플레이리스트로 저장돼요</span>
+        <div style="margin-top: 16px; display: flex; flex-direction: column; border-bottom: 1.5px solid #0A0A0A">
+          <sc-for list="{{pl.targets}}" as="o" hint-placeholder-count="5">
+            <button type="button" onClick="{{o.pick}}" style="min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; border: 0; border-top: 1.5px solid #0A0A0A; background: transparent; color: #0A0A0A; cursor: pointer; text-align: left">
+              <span style="display: flex; flex-direction: column; gap: 2px">
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; padding-top: 3px">{{o.label}}</span>
+                <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; color: rgba(10,10,10,0.72)">{{o.desc}}</span>
+              </span>
+              <span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+            </button>
+          </sc-for>
+        </div>
+        <button type="button" onClick="{{pl.closeSheet}}" style="margin-top: 12px; min-height: 44px; border: 0; background: transparent; color: rgba(10,10,10,0.72); cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.18em"><span style="padding-top: 2px">CANCEL</span></button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+<sc-if value="{{is.record}}" data-hint="{{ false }}">
+<div id="screen-record" style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFACD; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0; overflow-y: auto">
+    <div style="display: flex; align-items: center; min-height: 44px; margin-bottom: 8px">
+      <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72); padding-top: 2px">MY ARCHIVE</span>
+    </div>
+
+    <section style="padding: 0 0 8px">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 6px">RECORD</h1>
+
+      <div style="margin-top: 22px; border: 1.5px solid #0A0A0A; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+        <div style="padding: 16px 16px 14px; border-right: 1.5px solid #0A0A0A; border-bottom: 1.5px solid #0A0A0A; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.22em; color: rgba(10,10,10,0.72)">FESTIVALS</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.03em; line-height: 0.9; padding-top: 4px">{{rec.s1}}</span>
+        </div>
+        <div style="padding: 16px 16px 14px; border-bottom: 1.5px solid #0A0A0A; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.22em; color: rgba(10,10,10,0.72)">ARTISTS</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.03em; line-height: 0.9; padding-top: 4px">{{rec.s2}}</span>
+        </div>
+        <div style="padding: 16px 16px 14px; border-right: 1.5px solid #0A0A0A; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.22em; color: rgba(10,10,10,0.72)">GENRES</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.02em; line-height: 1.1; padding-top: 4px">{{rec.s3}}</span>
+        </div>
+        <div style="padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.22em; color: rgba(10,10,10,0.72)">CITIES</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 36px; letter-spacing: -0.03em; line-height: 0.9; padding-top: 4px">{{rec.s4}}</span>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{rec.showCard}}" data-hint="{{ true }}">
+      <section aria-label="새 리포트 만들기" style="margin: 28px 4px 0 0; border: 1.5px solid #0A0A0A; background: #FFFACD; box-shadow: 4px 4px 0 #0A0A0A; flex-shrink: 0">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 0 0 16px; border-bottom: 1.5px solid #0A0A0A">
+          <span style="display: flex; align-items: center; gap: 8px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.22em; padding-top: 2px">
+            <span style="background: #0A0A0A; color: #FFFACD; padding: 5px 8px 3px">JUST ENDED</span>
+            <span style="color: rgba(10,10,10,0.72)">OCT 18 · 21:50</span>
+          </span>
+          <button type="button" aria-label="닫기" onClick="{{rec.dismiss}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 0; border-left: 1.5px solid #0A0A0A; background: transparent; cursor: pointer; color: #0A0A0A">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+        <div style="padding: 18px 16px 16px">
+          <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 24px; letter-spacing: -0.01em; line-height: 0.95; text-transform: uppercase; padding-top: 3px">Grand Mint Festival 2026</h2>
+          <p style="margin: 10px 0 0; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 1.6">수고했어요! 기억이 생생할 때<br>오늘 밤을 리포트로 남겨둘까요?</p>
+          <div style="margin-top: 14px; display: flex; gap: 14px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72)">
+            <span><span style="color: #0A0A0A; font-size: 13px; letter-spacing: 0">24</span> PHOTOS</span>
+            <span><span style="color: #0A0A0A; font-size: 13px; letter-spacing: 0">{{rec.cardArtists}}</span> ARTISTS</span>
+            <span><span style="color: #0A0A0A; font-size: 13px; letter-spacing: 0">{{rec.cardTracks}}</span> TRACKS</span>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); border-top: 1.5px solid #0A0A0A">
+          <a role="button" tabindex="0" onClick="{{go.RecordEdit}}" style="cursor: pointer; min-height: 60px; display: flex; align-items: center; justify-content: center; gap: 8px; background: #0A0A0A; color: #FFFACD; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em"><span style="padding-top: 3px">CREATE REPORT</span><span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span></a>
+          <button type="button" onClick="{{rec.dismiss}}" style="min-height: 52px; border: 0; background: transparent; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72)">나중에</button>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{rec.hasRows}}" data-hint="{{ false }}">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; padding: 28px 0 14px">
+      <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+        <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 24px; letter-spacing: -0.01em; line-height: 1; padding-top: 3px">VISITED</h2>
+        <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 1.4; color: rgba(10,10,10,0.72)">다녀온 페스티벌을 다시 꺼내봐요</span>
+      </div>
+      <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72); padding-bottom: 2px; flex-shrink: 0">{{rec.total}}</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; border-bottom: 1.5px solid #0A0A0A">
+      <sc-for list="{{rec.rows}}" as="f" hint-placeholder-count="3">
+        <a role="button" tabindex="0" onClick="{{f.go}}" style="cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 18px 0; border-top: 1.5px solid #0A0A0A; text-decoration: none">
+          <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+            <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; line-height: 1.1; text-transform: uppercase; padding-top: 2px">{{f.name}}</span>
+            <span style="font-size: 13px; color: rgba(10,10,10,0.72)">{{f.meta}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0">
+            <sc-if value="{{f.draft}}" data-hint="{{ false }}">
+              <span style="border: 1.5px solid #0A0A0A; color: #0A0A0A; padding: 4px 7px 2px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; line-height: 1.1">NEW · DRAFT</span>
+            </sc-if>
+            <sc-if value="{{f.rated}}" data-hint="{{ true }}">
+              <span role="img" aria-label="{{f.label}}" style="display: flex; gap: 2px"><sc-for list="{{f.stars}}" as="st" hint-placeholder-count="5"><span style="display: flex; color: {{st.c}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.9l-5.8 3.2 1.4-6.4-4.9-4.4 6.5-.7z"></path></svg></span></sc-for></span>
+            </sc-if>
+            <span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+    </sc-if>
+    <sc-if value="{{rec.locked}}" data-hint="{{ true }}">
+      <section aria-label="리포트 잠김" style="margin-top: 28px; border-top: 1.5px solid #0A0A0A; border-bottom: 1.5px solid #0A0A0A; padding: 26px 0 22px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><rect x="5" y="10.5" width="14" height="10" rx="1"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path><path d="M12 14.5v2.5"></path></svg>
+          <div style="display: flex; flex-direction: column; gap: 3px; font-family: 'Noto Sans KR', sans-serif">
+            <span style="font-weight: 700; font-size: 16px">준비를 마치면 리포트가 열려요</span>
+            <span style="font-size: 13px; line-height: 1.5; color: rgba(10,10,10,0.72)">준비 탭 할 일을 모두 끝내면, 공연 후 바로<br>나만의 페스티벌 리포트를 만들 수 있어요</span>
+          </div>
+        </div>
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid rgba(10,10,10,0.2)">
+          <sc-for list="{{rec.tasks}}" as="k" hint-placeholder-count="4">
+            <li style="min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(10,10,10,0.2); font-family: 'Noto Sans KR', sans-serif; font-size: 14px">
+              <span style="display: flex; align-items: center; gap: 10px; font-weight: {{k.weight}}; color: {{k.color}}">
+                <span aria-hidden="true" style="width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; background: {{k.dot}}; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFACD" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+                {{k.label}}
+              </span>
+              <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72); padding-top: 2px">{{k.state}}</span>
+            </li>
+          </sc-for>
+        </ul>
+        <button type="button" onClick="{{rec.goPrep}}" style="min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 0; background: #0A0A0A; color: #FFFACD; cursor: pointer; font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.14em"><span style="padding-top: 3px">GO PREPARE</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+      </section>
+    </sc-if>
+    <div style="height: 24px; flex-shrink: 0"></div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(255,250,205,0.6)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(255,250,205,0.6)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #FFFACD">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>
+    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(255,250,205,0.6)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>
+    </a>
+  </nav>
+</div>
+</sc-if>
+<sc-if value="{{is.reportEdit}}" data-hint="{{ false }}">
+<div id="screen-reportEdit" style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFACD; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <div class="sb" style="height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+    <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+    <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+      <rect x="0" y="8" width="3" height="4" rx="1" fill="#0A0A0A"></rect>
+      <rect x="5" y="5" width="3" height="7" rx="1" fill="#0A0A0A"></rect>
+      <rect x="10" y="2" width="3" height="10" rx="1" fill="#0A0A0A"></rect>
+      <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#0A0A0A" stroke-width="1.5"></rect>
+      <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#0A0A0A"></rect>
+      <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#0A0A0A"></rect>
+    </svg>
+  </div>
+
+  <main style="flex: 1; display: flex; flex-direction: column; padding: 12px 28px 0; min-height: 0; overflow-y: auto">
+    <div style="display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-bottom: 8px; flex-shrink: 0">
+      <a role="button" tabindex="0" onClick="{{go.RecordHomeNew}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #0A0A0A"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">CANCEL</span></a>
+      <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: rgba(10,10,10,0.72); padding-top: 2px">DRAFT SAVED</span>
+    </div>
+
+    <section style="border-bottom: 1.5px solid #0A0A0A; padding: 0 0 22px; flex-shrink: 0">
+      <h1 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 34px; letter-spacing: -0.02em; line-height: 0.9; padding-top: 4px; white-space: nowrap">EDIT REPORT</h1>
+      <p style="margin: 12px 0 0; font-size: 13px; line-height: 1.5; color: rgba(10,10,10,0.72)">Grand Mint Festival 2026 · Oct 17–18</p>
+    </section>
+
+    <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 20px; flex-shrink: 0">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 4px">
+        <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">PHOTOS</h2>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{red.photoCount}} / 24</span>
+      </div>
+      <span style="display: block; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72); margin-bottom: 12px">탭해서 리포트에 넣을 사진을 골라요 · 첫 장이 대표 사진</span>
+      <div class="rp-strip" style="display: flex; gap: 8px; overflow-x: auto; margin-right: -28px; padding-right: 28px">
+        <sc-for list="{{red.photos}}" as="p" hint-placeholder-count="7">
+          <button type="button" aria-pressed="{{p.pressed}}" aria-label="{{p.label}}" onClick="{{p.toggle}}" style="position: relative; flex-shrink: 0; width: 80px; height: 80px; box-sizing: border-box; padding: 0; cursor: pointer; border: {{p.border}}; background-color: #0A0A0A; overflow: hidden; opacity: {{p.opacity}}">
+            <img src="{{p.src}}" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+            <sc-if value="{{p.on}}" data-hint="{{ true }}">
+              <span style="position: absolute; z-index: 1; top: 0; right: 0; width: 22px; height: 22px; background: #0A0A0A; display: flex; align-items: center; justify-content: center">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+              </span>
+            </sc-if>
+            <sc-if value="{{p.cover}}" data-hint="{{ false }}">
+              <span style="position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; background: #0A0A0A; color: #FFFACD; padding: 4px 0 2px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.2em; text-align: center">COVER</span>
+            </sc-if>
+          </button>
+        </sc-for>
+        <button type="button" aria-label="사진 추가" style="flex-shrink: 0; width: 80px; height: 80px; box-sizing: border-box; border: 1.5px dashed rgba(10,10,10,0.62); background: transparent; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: rgba(10,10,10,0.72); font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+          <span>ADD</span>
+        </button>
+      </div>
+    </section>
+
+    <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 22px; flex-shrink: 0">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 12px">
+        <label for="rp-highlight" style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">HIGHLIGHT</label>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{red.hlLen}} / 40</span>
+      </div>
+      <input id="rp-highlight" type="text" maxlength="40" value="{{red.highlight}}" onChange="{{red.onHighlight}}" placeholder="오늘 밤을 한 줄로 남겨봐요" style="width: 100%; box-sizing: border-box; height: 58px; border: 1.5px solid #0A0A0A; background: transparent; padding: 0 16px; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; font-weight: 500; font-style: italic; font-size: 17px; color: #0A0A0A; outline-offset: 2px">
+    </section>
+
+    <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 14px; flex-shrink: 0">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 6px">
+        <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">RATING</h2>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{red.rating}} / 5</span>
+      </div>
+      <div role="radiogroup" aria-label="별점" style="display: flex; margin-left: -10px">
+        <sc-for list="{{red.stars}}" as="s" hint-placeholder-count="5">
+          <button type="button" role="radio" aria-checked="{{s.checked}}" aria-label="{{s.label}}" onClick="{{s.pick}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 0; padding: 0; background: transparent; cursor: pointer; color: {{s.color}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.9l-5.8 3.2 1.4-6.4-4.9-4.4 6.5-.7z"></path></svg></button>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="border-bottom: 1.5px solid #0A0A0A; flex-shrink: 0">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 4px">
+        <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">ARTISTS</h2>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{red.seenCount}} SEEN</span>
+      </div>
+      <span style="display: block; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72); margin-bottom: 12px">내 타임테이블에서 불러왔어요 · 실제로 본 공연만 체크</span>
+      <ul style="list-style: none; margin: 0; padding: 0">
+        <sc-for list="{{red.artists}}" as="a" hint-placeholder-count="3">
+          <li style="border-top: 1px solid rgba(10,10,10,0.3)">
+            <button type="button" aria-pressed="{{a.pressed}}" onClick="{{a.toggle}}" style="width: 100%; min-height: 52px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 0; padding: 0; background: transparent; cursor: pointer; text-align: left; color: #0A0A0A">
+              <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                <span style="font-weight: 500; font-size: 16px; color: {{a.nameColor}}">{{a.name}}</span>
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.14em; color: rgba(10,10,10,0.62); padding-top: 1px">{{a.meta}}</span>
+              </span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{a.checkColor}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+            </button>
+          </li>
+        </sc-for>
+      </ul>
+      <a href="#" style="min-height: 44px; display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(10,10,10,0.3); text-decoration: none; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg><span>아티스트 추가</span></a>
+    </section>
+
+    <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 22px; flex-shrink: 0">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 12px">
+        <label for="rp-review" style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">REVIEW</label>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{red.rvLen}} / 300</span>
+      </div>
+      <textarea id="rp-review" rows="4" maxlength="300" value="{{red.review}}" onChange="{{red.onReview}}" placeholder="기억하고 싶은 순간을 자유롭게 적어봐요" style="display: block; width: 100%; box-sizing: border-box; border: 1.5px solid #0A0A0A; background: transparent; padding: 14px 16px; resize: none; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 1.8; color: #0A0A0A; outline-offset: 2px"></textarea>
+    </section>
+
+    <div style="padding: 20px 0 24px; flex-shrink: 0">
+      <button type="button" aria-pressed="{{red.againAttr}}" onClick="{{red.toggleAgain}}" style="width: 100%; min-height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1.5px solid #0A0A0A; background: {{red.againBg}}; color: {{red.againFg}}; cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.18em">
+        <sc-if value="{{red.again}}" data-hint="{{ true }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFACD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+        </sc-if>
+        <span style="padding-top: 3px">WOULD GO AGAIN</span>
+      </button>
+    </div>
+  </main>
+
+  <div style="flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{red.save}}" style="cursor: pointer; min-height: 88px; box-sizing: border-box; padding-bottom: 22px; display: flex; align-items: center; justify-content: center; background: #0A0A0A; color: #FFFACD; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em"><span style="padding-top: 3px">SAVE REPORT</span></a>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{is.report}}" data-hint="{{ false }}">
+<div id="screen-report" style="position: relative; width: 390px; height: 844px; box-sizing: border-box; background: #FFFACD; color: #0A0A0A; display: flex; flex-direction: column; font-family: 'Hanken Grotesk', 'Noto Sans KR', sans-serif; overflow: hidden">
+
+  <main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+
+    <section style="position: relative; height: 440px; flex-shrink: 0; background-color: #0A0A0A; color: #FFFACD; display: flex; flex-direction: column; overflow: hidden">
+      <img src="{{rep.cover}}" alt="GRAND MINT FESTIVAL 2026 대표 사진" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+      <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0) 22%, rgba(10,10,10,0.25) 45%, rgba(10,10,10,0.9) 100%)"></div>
+      <div class="sb" style="position: relative; z-index: 1; height: 44px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em; padding-top: 3px">9:41</span>
+        <svg width="44" height="12" viewBox="0 0 44 12" aria-hidden="true">
+          <rect x="0" y="8" width="3" height="4" rx="1" fill="#FFFACD"></rect>
+          <rect x="5" y="5" width="3" height="7" rx="1" fill="#FFFACD"></rect>
+          <rect x="10" y="2" width="3" height="10" rx="1" fill="#FFFACD"></rect>
+          <rect x="18.75" y="0.75" width="21.5" height="10.5" rx="3" fill="none" stroke="#FFFACD" stroke-width="1.5"></rect>
+          <rect x="21" y="3" width="15" height="6" rx="1.5" fill="#FFFACD"></rect>
+          <rect x="41.5" y="4" width="1.5" height="4" rx="0.75" fill="#FFFACD"></rect>
+        </svg>
+      </div>
+      <div style="position: relative; z-index: 1; padding: 12px 28px 0; display: flex; justify-content: space-between; align-items: center">
+        <a role="button" tabindex="0" onClick="{{go.RecordHome}}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; min-height: 44px; text-decoration: none; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; color: #FFFACD"><span aria-hidden="true" style="display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M20 12H5"></path><path d="M11 6l-6 6 6 6"></path></svg></span><span style="padding-top: 2px">RECORD</span></a>
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.18em; color: rgba(255,250,205,0.6); padding-top: 2px">MAIN PHOTO</span>
+      </div>
+      <div style="position: relative; z-index: 1; margin-top: auto; padding: 0 28px 26px; display: flex; flex-direction: column">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.22em; color: rgba(255,250,205,0.7)">INDIE · SEOUL · OCT 17–18</span>
+        <h1 style="margin: 12px 0 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 42px; letter-spacing: -0.02em; line-height: 0.9; text-transform: uppercase; padding-top: 6px">Grand Mint<br>Festival 2026</h1>
+        <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px">
+          <span style="font-size: 13px; color: rgba(255,250,205,0.75)">Olympic Park, Seoul</span>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; padding-top: 2px">1 / {{rep.photoCount}}</span>
+        </div>
+      </div>
+    </section>
+
+    <div style="padding: 0 28px; display: flex; flex-direction: column">
+
+      <section style="border-bottom: 1.5px solid #0A0A0A; padding: 28px 0 14px">
+        <p style="margin: 0; font-weight: 500; font-style: italic; font-size: 24px; line-height: 1.4; letter-spacing: -0.01em">“{{rep.highlight}}”</p>
+        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between">
+          <div role="radiogroup" aria-label="별점" style="display: flex; margin-left: -12px">
+            <sc-for list="{{rep.stars}}" as="s" hint-placeholder-count="5">
+              <button type="button" role="radio" aria-checked="{{s.checked}}" aria-label="{{s.label}}" onClick="{{s.pick}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 0; padding: 0; background: transparent; cursor: pointer; color: {{s.color}}"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" aria-hidden="true" style="display: block"><path d="M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.9l-5.8 3.2 1.4-6.4-4.9-4.4 6.5-.7z"></path></svg></button>
+            </sc-for>
+          </div>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{rep.rating}} / 5</span>
+        </div>
+      </section>
+
+      <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 24px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 12px">
+          <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">MOMENTS</h2>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{rep.photoCount}} PHOTOS</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 104px; gap: 6px">
+          <sc-for list="{{rep.moments}}" as="m" hint-placeholder-count="4">
+            <div role="img" aria-label="{{m.label}}" style="{{m.span}}position: relative; overflow: hidden; box-sizing: border-box; border: 1.5px solid #0A0A0A; background-color: #0A0A0A; display: flex; align-items: flex-end; padding: 8px">
+              <img src="{{m.src}}" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
+              <sc-if value="{{m.cover}}" data-hint="{{ false }}"><span style="position: relative; z-index: 1; background: #0A0A0A; color: #FFFACD; padding: 4px 7px 2px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.14em">COVER</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{rep.noPhotos}}" data-hint="{{ false }}">
+          <span style="display: block; padding: 4px 0 2px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72)">리포트에 넣은 사진이 없어요</span>
+        </sc-if>
+      </section>
+
+      <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 22px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 22px 0 14px">
+          <h2 style="margin: 0; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">ARTISTS I SAW</h2>
+          <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.12em; color: rgba(10,10,10,0.72)">{{rep.seenCount}} / {{rep.artistTotal}}</span>
+        </div>
+        <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 8px">
+          <sc-for list="{{rep.artists}}" as="a" hint-placeholder-count="3">
+            <li style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+              <sc-if value="{{a.seenImg}}" data-hint="{{ true }}">
+                <div style="position: relative; width: 64px; height: 64px">
+                  <img src="{{a.img}}" alt="{{a.name}}" style="width: 64px; height: 64px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #0A0A0A; object-fit: cover; display: block">
+                  <span style="position: absolute; right: -2px; bottom: -2px; width: 22px; height: 22px; border-radius: 50%; background: #0A0A0A; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFACD" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+                </div>
+              </sc-if>
+              <sc-if value="{{a.seenNoImg}}" data-hint="{{ false }}">
+                <div style="position: relative; width: 64px; height: 64px">
+                  <div aria-hidden="true" style="width: 64px; height: 64px; box-sizing: border-box; border-radius: 50%; background: #0A0A0A; color: #FFFACD; display: flex; align-items: center; justify-content: center; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 20px">{{a.initial}}</div>
+                  <span style="position: absolute; right: -2px; bottom: -2px; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; background: #FFFACD; border: 1.5px solid #0A0A0A; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+                </div>
+              </sc-if>
+              <sc-if value="{{a.unseen}}" data-hint="{{ false }}">
+                <div role="img" aria-label="{{a.name}} — 못 봤어요" style="width: 64px; height: 64px; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed rgba(10,10,10,0.35)"></div>
+              </sc-if>
+              <span style="font-weight: {{a.weight}}; font-size: 12px; line-height: 1.2; color: {{a.color}}">{{a.name}}</span>
+            </li>
+          </sc-for>
+        </ul>
+      </section>
+
+      <section style="border-bottom: 1.5px solid #0A0A0A; padding-bottom: 24px">
+        <h2 style="margin: 0; padding: 22px 0 12px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.05em">REVIEW</h2>
+        <p style="margin: 0; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; line-height: 1.85; color: {{rep.reviewColor}}">{{rep.review}}</p>
+        <span style="display: block; margin-top: 14px; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; color: rgba(10,10,10,0.72)">WRITTEN OCT 19, 2026</span>
+      </section>
+
+      <div style="padding: 20px 0 24px">
+        <sc-if value="{{rep.shared}}" data-hint="{{ false }}">
+          <div role="status" style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+            <span>{{rep.sharedMsg}}</span>
+          </div>
+        </sc-if>
+        <button type="button" aria-haspopup="dialog" onClick="{{rep.openShare}}" style="width: 100%; min-height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 0; background: #0A0A0A; color: #FFFACD; cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.14em">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFACD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"></path><path d="M7 8l5-5 5 5"></path><path d="M4 14v6h16v-6"></path></svg>
+          <span style="padding-top: 3px">SHARE REPORT</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <nav aria-label="메인 탭" style="background: #0A0A0A; padding: 8px 28px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex-shrink: 0">
+    <a role="button" tabindex="0" onClick="{{go.DiscoverCarousel}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(255,250,205,0.6)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">탐색</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.Main}}" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(255,250,205,0.6)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1"></rect><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">준비</span>
+    </a>
+    <a role="button" tabindex="0" onClick="{{go.RecordHome}}" aria-current="page" style="cursor: pointer; min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #FFFACD">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1"></rect><circle cx="9" cy="10" r="1.75"></circle><path d="M20.5 15.5l-5-5-9.5 9"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.04em; line-height: 1">기록</span>
+    </a>
+    <a href="#" style="min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: rgba(255,250,205,0.6)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20.5c1.3-3.6 4-5.5 7.5-5.5s6.2 1.9 7.5 5.5"></path></svg>
+      <span style="font-family: 'Josefin Sans', 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.04em; line-height: 1">MY</span>
+    </a>
+  </nav>
+
+  <sc-if value="{{rep.sheetOpen}}" data-hint="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; justify-content: flex-end">
+      <button type="button" aria-label="공유 닫기" onClick="{{rep.closeShare}}" style="position: absolute; inset: 0; border: 0; padding: 0; background: rgba(10,10,10,0.45); cursor: pointer"></button>
+      <div role="dialog" aria-label="리포트 공유" style="position: relative; background: #FFFACD; border-top: 1.5px solid #0A0A0A; padding: 22px 28px 34px; display: flex; flex-direction: column">
+        <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.2em; color: rgba(10,10,10,0.72)">SHARE TO</span>
+        <span style="margin-top: 6px; font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 18px">리포트를 어디에 공유할까요?</span>
+        <span style="margin-top: 2px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; color: rgba(10,10,10,0.72)">대표 사진·한 줄 소감·별점이 카드 한 장으로 만들어져요</span>
+        <div style="margin-top: 16px; display: flex; flex-direction: column; border-bottom: 1.5px solid #0A0A0A">
+          <sc-for list="{{rep.targets}}" as="o" hint-placeholder-count="4">
+            <button type="button" onClick="{{o.pick}}" style="min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; border: 0; border-top: 1.5px solid #0A0A0A; background: transparent; color: #0A0A0A; cursor: pointer; text-align: left">
+              <span style="display: flex; flex-direction: column; gap: 2px">
+                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; padding-top: 3px">{{o.label}}</span>
+                <span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; color: rgba(10,10,10,0.72)">{{o.desc}}</span>
+              </span>
+              <span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: block; flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+            </button>
+          </sc-for>
+        </div>
+        <button type="button" onClick="{{rep.closeShare}}" style="margin-top: 12px; min-height: 44px; border: 0; background: transparent; color: rgba(10,10,10,0.72); cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.18em"><span style="padding-top: 2px">CANCEL</span></button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</div>
+</template>
+<script type="text/x-festie" id="app-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      screen: 'prep',
+      added: false,
+      query: '',
+      day: 1, ttOpen: false, tteOpen: false,
+      picks: {},
+      checked: {}, custom: [], draft: '',
+      plExpanded: {}, plSheet: false, exportedTo: '',
+      photos: [false, false, false, false, false, false, false],
+      highlight: '', rating: 0, seen: {}, review: '', again: false,
+      saved: false, cardDismissed: false, shareOpen: false, sharedMsg: ''
+    };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    function go(screen) {
+      return function () { self.setState({ screen: screen, ttOpen: false, tteOpen: false, plSheet: false, shareOpen: false }); };
+    }
+    function noop() {}
+
+    // ---------- shared data ----------
+    var LINEUP = {
+      1: {
+        main: [['d1m1', '적재', '16:00', '16:50'], ['d1m2', '페퍼톤스', '17:20', '18:10'], ['d1m3', '장기하', '18:40', '19:40'], ['d1m4', '이소라', '20:20', '21:30']],
+        s2: [['d1s1', '카더가든', '16:10', '17:00'], ['d1s2', '리도어', '17:30', '18:20'], ['d1s3', '터치드', '18:50', '19:50'], ['d1s4', '이승윤', '20:30', '21:40']]
+      },
+      2: {
+        main: [['d2m1', '정승환', '16:00', '16:50'], ['d2m2', '로이킴', '17:20', '18:10'], ['d2m3', '씨엔블루', '18:40', '19:40'], ['d2m4', '윤하', '20:20', '21:30']],
+        s2: [['d2s1', '솔루션스', '16:10', '17:00'], ['d2s2', '엔플라잉', '17:30', '18:30'], ['d2s3', '쏜애플', '19:00', '20:00'], ['d2s4', '십란', '20:40', '21:50']]
+      }
+    };
+    var STAGE = { main: 'MINT BREEZE STAGE', s2: 'CLUB MIDNIGHT SUNSET' };
+    var STAGE_SHORT = { main: 'MINT BREEZE', s2: 'MIDNIGHT SUNSET' };
+    var DATES = { 1: 'OCT 17', 2: 'OCT 18' };
+    var SONGS = {
+      '페퍼톤스': ['CHANCE!', '행운을 빈다', 'Shine', 'FAST', 'New Hippie Generation', '21세기의 어떤 날'],
+      '터치드': ['Highlight', 'Hi Bully', 'Fallen Angel', 'Dynamite', 'Last Day', 'Stand Up!'],
+      '이소라': ['처음 느낌 그대로', '난 행복해', '너무 다른 널 보면서', '청혼', '제발', '바람이 분다'],
+      '적재': ['별 보러 가자', '나랑 같이 걸을래', '타투'],
+      '장기하': ['싸구려 커피', '별일 없이 산다', '그건 니 생각이고'],
+      '카더가든': ['나무', '명동콜링', '그대 작은 나의 세상이 되어'],
+      '이승윤': ['달이 참 예쁘다고', '언덕나무', '들려주고 싶었던'],
+      '정승환': ['너였다면', '눈사람', '이 바보야'],
+      '로이킴': ['봄봄봄', '그때 헤어지면 돼', '내게 사랑이 뭐냐고 물어본다면'],
+      '씨엔블루': ['외톨이야', '직감', 'Can’t Stop'],
+      '윤하': ['사건의 지평선', '비밀번호 486', '오르트구름'],
+      '엔플라잉': ['옥탑방', 'Blue Moon'],
+      '쏜애플': ['시퍼런 봄', '아지랑이', '난 자꾸 말을 더듬고']
+    };
+    var ARTIST_IMG = {
+      '이소라': 'images/artists_leesora.jpg',
+      '장기하': 'images/artists_janggiha.jpg',
+      '윤하': 'images/artists_yoonha.jpg',
+      '십란': 'images/artists_sipran.jpg',
+      '페퍼톤스': 'images/artists_peppertones.jpg'
+    };
+    var PHOTO_SRC = ['images/report_r2.jpg', 'images/report_r7.jpg', 'images/report_r4.jpg', 'images/report_r1.jpg', 'images/report_r3.jpg', 'images/report_r6.jpg', 'images/report_r5.jpg'];
+
+    function toMin(t) { var p = t.split(':'); return Number(p[0]) * 60 + Number(p[1]); }
+    var allSets = [];
+    [1, 2].forEach(function (d) {
+      ['main', 's2'].forEach(function (k) {
+        LINEUP[d][k].forEach(function (r) {
+          allSets.push({ id: r[0], day: d, stage: k, name: r[1], start: r[2], end: r[3], a: toMin(r[2]), b: toMin(r[3]) });
+        });
+      });
+    });
+    var picked = allSets.filter(function (x) { return !!st.picks[x.id]; }).sort(function (x, y) { return x.day - y.day || x.a - y.a; });
+    var nPicks = picked.length;
+    var trackTotal = picked.reduce(function (s, x) { return s + (SONGS[x.name] || ['', '', '']).length; }, 0);
+
+    var CATS = [
+      { en: 'ESSENTIALS', ko: '필수', items: [['e1', '모바일 티켓'], ['e2', '신분증'], ['e3', '보조배터리 · 충전 케이블'], ['e4', '카드 · 현금'], ['e5', '이어플러그']] },
+      { en: 'WEAR', ko: '옷 · 신발', items: [['w1', '편한 운동화'], ['w2', '우비'], ['w3', '얇은 겉옷'], ['w4', '모자']] },
+      { en: 'CARE', ko: '편의용품', items: [['c1', '선크림'], ['c2', '물티슈'], ['c3', '손선풍기'], ['c4', '휴대용 방석']] }
+    ];
+    if (st.custom.length) {
+      CATS.push({ en: 'MY ITEMS', ko: '직접 추가', items: st.custom.map(function (c) { return [c.id, c.label]; }) });
+    }
+    var packed = 0, packTotal = 0;
+    CATS.forEach(function (c) { c.items.forEach(function (r) { packTotal++; if (st.checked[r[0]]) packed++; }); });
+    var allPacked = packTotal > 0 && packed === packTotal;
+    var exported = !!st.exportedTo;
+    var prepDone = st.added && nPicks > 0 && allPacked && exported;
+    var remaining = [];
+    if (!nPicks) remaining.push('타임테이블');
+    if (!allPacked) remaining.push('체크리스트');
+    if (!exported) remaining.push('플레이리스트');
+
+    // ---------- prep ----------
+    var prep = {
+      added: !!st.added,
+      empty: !st.added,
+      headline: !st.added ? '아직 준비 중인 페스티벌이 없어요' : (prepDone ? '준비를 모두 마쳤어요!' : '다가오는 페스티벌이 1개 있어요!'),
+      sub: !st.added ? '가고 싶은 페스티벌을 먼저 담아볼까요?' : (prepDone ? '공연이 끝나면 기록 탭에서 리포트를 만들어요' : '하나씩 차근차근 준비해봐요'),
+      firstDday: 'D-4',
+      firstColor: '#0A0A0A'
+    };
+
+    // ---------- discover ----------
+    var SECTIONS = [
+      { title: 'THIS WEEK', sub: '곧 열리는 페스티벌, 놓치지 마세요', cardW: 264, posterH: 352, nameSize: 26, rows: [
+        { name: 'Grand Mint Festival 2026', poster: 'images/poster_gmf.jpg', meta: 'Oct 17–18 · Seoul · Indie', dday: 'D-4', detail: true },
+        { name: 'NOL Festival 2026', poster: 'images/poster_nol.jpg', meta: 'Oct 17–18 · Goyang · Pop', dday: 'D-4' },
+        { name: 'INMUFE 2026', poster: 'images/poster_inmufe.jpg', meta: 'Oct 17–18 · Suwon · Indie', dday: 'D-4' }
+      ] },
+      { title: 'COMING UP', sub: '미리 찜해두고 천천히 준비해봐요', cardW: 184, posterH: 244, nameSize: 19, rows: [
+        { name: 'Sejong Bohemian Music Festival', poster: 'images/poster_sejong.jpg', meta: 'Oct 30–Nov 1 · Sejong · Indie', dday: 'D-17' },
+        { name: 'Wonderlivet 2026', poster: 'images/poster_wonderlivet.jpg', meta: 'Nov 20–22 · Goyang · J-Pop', dday: 'D-38' },
+        { name: 'Hero Rock Festival 2026', poster: 'images/poster_hero.jpg', meta: 'Dec 18–20 · Incheon · Rock', dday: 'D-66' },
+        { name: 'Countdown Fantasy 2026–2027', poster: 'images/poster_countdown.jpg', meta: 'Dec 31 · Goyang · Rock', dday: 'D-79' }
+      ] }
+    ];
+    var q = (st.query || '').trim().toLowerCase();
+    var sections = SECTIONS.map(function (s) {
+      var rows = s.rows.filter(function (r) {
+        return !q || (r.name + ' ' + r.meta).toLowerCase().indexOf(q) !== -1;
+      }).map(function (r) {
+        return Object.assign({}, r, { posterLabel: r.name + ' 포스터', go: r.detail ? go('detail') : noop });
+      });
+      return { title: s.title, sub: s.sub, cardW: s.cardW, posterH: s.posterH, nameSize: s.nameSize, rows: rows };
+    }).filter(function (s) { return s.rows.length > 0; });
+    var disc = {
+      query: st.query,
+      onQuery: function (e) { self.setState({ query: e.target.value }); },
+      sections: sections,
+      empty: sections.length === 0
+    };
+
+    // ---------- detail ----------
+    var det = {
+      added: !!st.added,
+      notAdded: !st.added,
+      add: function () { self.setState({ added: true }); }
+    };
+
+    // ---------- dashboard ----------
+    var dash = {
+      ttEmpty: nPicks === 0,
+      ttLabel: nPicks + ' PICKS',
+      plLabel: exported ? 'SAVED · ' + st.exportedTo : (nPicks ? trackTotal + ' TRACKS' : 'PICK SETS FIRST'),
+      chkLabel: packed + ' / ' + packTotal + ' PACKED',
+      sub: prepDone ? '준비 끝! 이제 즐기기만 하면 돼요' : '남은 준비 · ' + remaining.join(' · '),
+      openTT: go(nPicks ? 'tt' : 'tte')
+    };
+
+    // ---------- day dropdown helper ----------
+    function dayList(openKey) {
+      return [1, 2].map(function (d) {
+        var on = d === st.day;
+        return {
+          label: 'DAY ' + d,
+          date: DATES[d],
+          bg: on ? '#0A0A0A' : 'transparent',
+          fg: on ? '#F3D9FF' : '#0A0A0A',
+          divider: d === 1 ? '0' : '1px solid rgba(10,10,10,0.3)',
+          selected: on ? 'true' : 'false',
+          pick: function () { var p = { day: d }; p[openKey] = false; self.setState(p); }
+        };
+      });
+    }
+    function toggler(openKey) {
+      return function () { self.setState(function (s) { var p = {}; p[openKey] = !s[openKey]; return p; }); };
+    }
+
+    // ---------- my timetable ----------
+    function fmt(m) {
+      var h = Math.floor(m / 60), r = m % 60;
+      return ((h ? h + '시간 ' : '') + (r ? r + '분' : '')).trim();
+    }
+    var dayPicks = picked.filter(function (x) { return x.day === st.day; });
+    var ttRows = [];
+    dayPicks.forEach(function (s, i) {
+      var last = i === dayPicks.length - 1;
+      ttRows.push({ isSet: true, isGap: false, name: s.name, stage: STAGE[s.stage], start: s.start, end: s.end,
+        lt: i === 0 ? '22px' : '0px', lb: last ? 'calc(100% - 22px)' : '0px', text: '' });
+      if (!last) {
+        var next = dayPicks[i + 1];
+        var free = next.a - s.b;
+        var move = next.stage === s.stage ? '같은 스테이지' : STAGE_SHORT[next.stage] + ' 이동';
+        ttRows.push({ isSet: false, isGap: true, text: (free > 0 ? fmt(free) + ' 여유' : (free < 0 ? '시간 겹침' : '바로 이어서')) + ' · ' + move });
+      }
+    });
+    var tt = {
+      days: dayList('ttOpen'),
+      open: !!st.ttOpen,
+      openAttr: st.ttOpen ? 'true' : 'false',
+      chevron: st.ttOpen ? 180 : 0,
+      curLabel: 'DAY ' + st.day,
+      curDate: DATES[st.day],
+      toggleOpen: toggler('ttOpen'),
+      rows: ttRows,
+      count: dayPicks.length,
+      span: dayPicks.length ? dayPicks[0].start + ' – ' + dayPicks[dayPicks.length - 1].end : '— : —',
+      hasPicks: dayPicks.length > 0,
+      empty: dayPicks.length === 0
+    };
+
+    // ---------- timetable edit ----------
+    var dayAll = allSets.filter(function (x) { return x.day === st.day; });
+    var dayPicked = dayAll.filter(function (x) { return !!st.picks[x.id]; });
+    var conflictIds = {}, conflictCount = 0;
+    for (var i = 0; i < dayPicked.length; i++) {
+      for (var j = i + 1; j < dayPicked.length; j++) {
+        if (dayPicked[i].a < dayPicked[j].b && dayPicked[j].a < dayPicked[i].b) {
+          conflictIds[dayPicked[i].id] = true; conflictIds[dayPicked[j].id] = true; conflictCount++;
+        }
+      }
+    }
+    function cell(x) {
+      var p = !!st.picks[x.id];
+      return {
+        name: x.name,
+        time: x.start + '–' + x.end,
+        top: x.a - 16 * 60 + 9,
+        h: x.b - x.a - 2,
+        bg: p ? '#0A0A0A' : '#F3D9FF',
+        fg: p ? '#F3D9FF' : '#0A0A0A',
+        sub: p ? 'rgba(243,217,255,0.8)' : 'rgba(10,10,10,0.72)',
+        picked: p,
+        notPicked: !p,
+        conflict: !!conflictIds[x.id],
+        pressed: p ? 'true' : 'false',
+        toggle: function () {
+          self.setState(function (s) {
+            var n = Object.assign({}, s.picks);
+            n[x.id] = !n[x.id];
+            return { picks: n };
+          });
+        }
+      };
+    }
+    var hours = [];
+    for (var h = 16; h <= 22; h++) { hours.push({ top: 8 + (h - 16) * 60, label: h + ':00' }); }
+    var tte = {
+      days: dayList('tteOpen'),
+      open: !!st.tteOpen,
+      openAttr: st.tteOpen ? 'true' : 'false',
+      chevron: st.tteOpen ? 180 : 0,
+      curLabel: 'DAY ' + st.day,
+      curDate: DATES[st.day],
+      toggleOpen: toggler('tteOpen'),
+      hours: hours,
+      mainSets: dayAll.filter(function (x) { return x.stage === 'main'; }).map(cell),
+      s2Sets: dayAll.filter(function (x) { return x.stage === 's2'; }).map(cell),
+      pickCount: dayPicked.length,
+      conflictCount: conflictCount,
+      hasConflict: conflictCount > 0,
+      pickSummary: dayPicked.length ? dayPicked.slice().sort(function (a, b) { return a.a - b.a; }).map(function (x) { return x.name; }).join(' · ') : '아직 고른 공연이 없어요'
+    };
+
+    // ---------- checklist ----------
+    var cats = CATS.map(function (c, ci) {
+      var cd = 0;
+      var items = c.items.map(function (r) {
+        var on = !!st.checked[r[0]];
+        if (on) cd++;
+        return {
+          label: r[1],
+          checkedAttr: on ? 'true' : 'false',
+          stroke: on ? '#0A0A0A' : 'rgba(10,10,10,0.25)',
+          weight: on ? 400 : 500,
+          color: on ? 'rgba(10,10,10,0.5)' : '#0A0A0A',
+          deco: on ? 'line-through' : 'none',
+          toggle: function () {
+            self.setState(function (s) {
+              var n = Object.assign({}, s.checked);
+              n[r[0]] = !n[r[0]];
+              return { checked: n };
+            });
+          }
+        };
+      });
+      return { en: c.en, ko: c.ko, done: cd, total: items.length, items: items, divider: ci === 0 ? '0' : '1.5px solid #0A0A0A' };
+    });
+    var left = packTotal - packed;
+    function addItem() {
+      var v = (self.state.draft || '').trim();
+      if (!v) return;
+      self.setState(function (s) {
+        return { custom: s.custom.concat([{ id: 'u' + (s.custom.length + 1), label: v }]), draft: '' };
+      });
+    }
+    var chk = {
+      cats: cats,
+      done: packed,
+      total: packTotal,
+      pct: packTotal ? Math.round(packed / packTotal * 100) : 0,
+      headline: left === 0 ? '다 챙겼어요! 이제 즐기기만 하면 돼요' : (packed === 0 ? '챙길 것 ' + packTotal + '개, 하나씩 체크해봐요!' : '챙길 것 ' + packed + '개 끝, ' + left + '개 남았어요!'),
+      subline: left === 0 ? '출발 전에 한 번만 더 훑어봐요' : '체크하면서 하나씩 짐을 싸봐요',
+      draft: st.draft,
+      onDraft: function (e) { self.setState({ draft: e.target.value }); },
+      onKey: function (e) { if (e.key === 'Enter') { addItem(); } },
+      addItem: addItem
+    };
+
+    // ---------- playlist ----------
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+    var multiDay = picked.some(function (x) { return x.day === 1; }) && picked.some(function (x) { return x.day === 2; });
+    var groups = picked.map(function (x, gi) {
+      var songs = SONGS[x.name] || ['[대표곡 1]', '[대표곡 2]', '[대표곡 3]'];
+      var open = !!st.plExpanded[x.id];
+      var tracks = songs.map(function (title, k) {
+        return { no: pad(k + 1), title: title, tag: k === 0 ? 'OPENER' : (k === songs.length - 1 ? 'CLOSER' : '') };
+      });
+      return {
+        artist: x.name,
+        when: (multiDay ? 'DAY ' + x.day + ' · ' : '') + x.start + ' · ' + STAGE[x.stage],
+        count: songs.length,
+        divider: gi === 0 ? '0' : '1.5px solid #0A0A0A',
+        tracks: open ? tracks : tracks.slice(0, 3),
+        hasMore: songs.length > 3,
+        moreLabel: open ? 'SHOW LESS' : '+' + (songs.length - 3) + ' MORE',
+        chevron: open ? 180 : 0,
+        expandedAttr: open ? 'true' : 'false',
+        toggle: function () {
+          self.setState(function (s) {
+            var e = Object.assign({}, s.plExpanded);
+            e[x.id] = !e[x.id];
+            return { plExpanded: e };
+          });
+        }
+      };
+    });
+    var TARGETS = [
+      ['SPOTIFY', 'Spotify 계정에 새 플레이리스트로 저장'],
+      ['APPLE MUSIC', 'Apple Music 보관함에 추가'],
+      ['YOUTUBE MUSIC', 'YouTube Music 재생목록으로 저장'],
+      ['MELON', '멜론 내 플레이리스트로 저장'],
+      ['COPY LINK', '곡 목록 링크를 복사해서 공유']
+    ];
+    var pl = {
+      headline: nPicks ? '내 동선 ' + nPicks + '팀의 셋리스트로 만들었어요' : '타임테이블에서 공연을 고르면 셋리스트로 만들어줘요',
+      groups: groups,
+      trackCount: trackTotal,
+      sheetOpen: !!st.plSheet,
+      openSheet: nPicks ? function () { self.setState({ plSheet: true }); } : go('tte'),
+      closeSheet: function () { self.setState({ plSheet: false }); },
+      targets: TARGETS.map(function (t) {
+        return { label: t[0], desc: t[1], pick: function () { self.setState({ plSheet: false, exportedTo: t[0] }); } };
+      }),
+      exported: exported,
+      exportedTo: st.exportedTo
+    };
+
+    // ---------- report edit ----------
+    var firstOn = st.photos.indexOf(true);
+    var photos = st.photos.map(function (on, k) {
+      return {
+        src: PHOTO_SRC[k],
+        on: on,
+        cover: on && k === firstOn,
+        pressed: on ? 'true' : 'false',
+        label: '사진 ' + (k + 1) + (on ? ' 선택됨' : ''),
+        border: on ? '1.5px solid #0A0A0A' : '1.5px solid rgba(10,10,10,0.25)',
+        opacity: on ? '1' : '0.5',
+        toggle: function () {
+          self.setState(function (s) {
+            var next = s.photos.slice();
+            next[k] = !next[k];
+            return { photos: next };
+          });
+        }
+      };
+    });
+    var seenCount = picked.filter(function (x) { return !!st.seen[x.id]; }).length;
+    var stars = [1, 2, 3, 4, 5].map(function (n) {
+      return {
+        color: n <= st.rating ? '#0A0A0A' : 'rgba(10,10,10,0.2)',
+        checked: n === st.rating ? 'true' : 'false',
+        label: n + '점',
+        pick: function () { self.setState({ rating: n }); }
+      };
+    });
+    var again = !!st.again;
+    var red = {
+      photos: photos,
+      photoCount: st.photos.filter(Boolean).length,
+      highlight: st.highlight,
+      hlLen: st.highlight.length,
+      onHighlight: function (e) { self.setState({ highlight: e.target.value }); },
+      rating: st.rating,
+      stars: stars,
+      artists: picked.map(function (x) {
+        var on = !!st.seen[x.id];
+        return {
+          name: x.name,
+          meta: x.start + ' · ' + STAGE_SHORT[x.stage],
+          pressed: on ? 'true' : 'false',
+          nameColor: on ? '#0A0A0A' : 'rgba(10,10,10,0.5)',
+          checkColor: on ? '#0A0A0A' : 'rgba(10,10,10,0.2)',
+          toggle: function () {
+            self.setState(function (s) {
+              var n = Object.assign({}, s.seen);
+              n[x.id] = !n[x.id];
+              return { seen: n };
+            });
+          }
+        };
+      }),
+      seenCount: seenCount,
+      review: st.review,
+      rvLen: st.review.length,
+      onReview: function (e) { self.setState({ review: e.target.value }); },
+      again: again,
+      againAttr: again ? 'true' : 'false',
+      againBg: again ? '#0A0A0A' : 'transparent',
+      againFg: again ? '#FFFACD' : 'rgba(10,10,10,0.6)',
+      toggleAgain: function () { self.setState(function (s) { return { again: !s.again }; }); },
+      save: function () { self.setState({ saved: true, screen: 'report', sharedMsg: '', shareOpen: false }); }
+    };
+
+    // ---------- report ----------
+    var chosen = [];
+    st.photos.forEach(function (on, k) { if (on) chosen.push(PHOTO_SRC[k]); });
+    var SHARE = [
+      ['INSTAGRAM STORY', '스토리용 세로 카드로 바로 올리기', '인스타그램 스토리에 공유했어요'],
+      ['KAKAOTALK', '친구에게 리포트 링크 보내기', '카카오톡으로 보냈어요'],
+      ['SAVE IMAGE', '리포트 카드를 앨범에 저장', '이미지를 앨범에 저장했어요'],
+      ['COPY LINK', '리포트 링크 복사하기', '링크를 복사했어요']
+    ];
+    var rep = {
+      cover: chosen.length ? chosen[0] : PHOTO_SRC[0],
+      highlight: st.highlight || '한 줄 소감을 남겨보세요',
+      rating: st.rating,
+      stars: stars,
+      photoCount: chosen.length,
+      noPhotos: chosen.length === 0,
+      moments: chosen.map(function (src, k) {
+        return {
+          src: src,
+          cover: k === 0,
+          label: k === 0 ? '대표 사진' : '현장 사진 ' + (k + 1),
+          span: k === 0 ? 'grid-column: span 2; grid-row: span 2; ' : ''
+        };
+      }),
+      artists: picked.map(function (x) {
+        var on = !!st.seen[x.id];
+        var img = ARTIST_IMG[x.name];
+        return {
+          name: x.name,
+          img: img || '',
+          initial: x.name.charAt(0),
+          seenImg: on && !!img,
+          seenNoImg: on && !img,
+          unseen: !on,
+          weight: on ? 600 : 500,
+          color: on ? '#0A0A0A' : 'rgba(10,10,10,0.72)'
+        };
+      }),
+      seenCount: seenCount,
+      artistTotal: nPicks,
+      review: st.review || '아직 감상을 남기지 않았어요',
+      reviewColor: st.review ? '#0A0A0A' : 'rgba(10,10,10,0.55)',
+      targets: SHARE.map(function (t) {
+        return { label: t[0], desc: t[1], pick: function () { self.setState({ shareOpen: false, sharedMsg: t[2] }); } };
+      }),
+      sheetOpen: !!st.shareOpen,
+      openShare: function () { self.setState({ shareOpen: true }); },
+      closeShare: function () { self.setState({ shareOpen: false }); },
+      shared: !!st.sharedMsg,
+      sharedMsg: st.sharedMsg
+    };
+
+    // ---------- record home ----------
+    var recRows = [];
+    if (st.saved) {
+      recRows.push({ name: 'Grand Mint Festival 2026', meta: 'Oct 17–18 · Seoul · Indie', draft: false, rated: true,
+        stars: [1, 2, 3, 4, 5].map(function (n) { return { c: n <= st.rating ? '#0A0A0A' : 'rgba(10,10,10,0.2)' }; }),
+        label: '별점 5점 중 ' + st.rating + '점', go: go('report') });
+    } else if (prepDone) {
+      recRows.push({ name: 'Grand Mint Festival 2026', meta: 'Oct 17–18 · Seoul · Indie', draft: true, rated: false,
+        stars: [], label: '', go: go('reportEdit') });
+    }
+    var TASKS = [
+      ['페스티벌 담기', !!st.added],
+      ['타임테이블에서 공연 고르기', nPicks > 0],
+      ['체크리스트 모두 챙기기', allPacked],
+      ['예습 플레이리스트 내보내기', exported]
+    ];
+    var rec = {
+      s1: st.saved ? 1 : 0,
+      s2: st.saved ? seenCount : 0,
+      s3: st.saved ? 'INDIE' : '—',
+      s4: st.saved ? 1 : 0,
+      total: st.saved ? '1 TOTAL' : (prepDone ? '1 DRAFT' : '0 TOTAL'),
+      showCard: prepDone && !st.saved && !st.cardDismissed,
+      dismiss: function () { self.setState({ cardDismissed: true }); },
+      cardArtists: nPicks,
+      cardTracks: trackTotal,
+      rows: recRows,
+      hasRows: recRows.length > 0,
+      locked: !prepDone && !st.saved,
+      tasks: TASKS.map(function (k) {
+        return { label: k[0], state: k[1] ? 'DONE' : 'TO DO', dot: k[1] ? '#0A0A0A' : 'transparent',
+          weight: k[1] ? 400 : 700, color: k[1] ? 'rgba(10,10,10,0.55)' : '#0A0A0A' };
+      }),
+      goPrep: go(st.added ? 'dash' : 'prep')
+    };
+
+    var SCREENS = ['prep', 'discover', 'detail', 'dash', 'tt', 'tte', 'check', 'playlist', 'record', 'reportEdit', 'report'];
+    var is = {};
+    SCREENS.forEach(function (s) { is[s] = st.screen === s; });
+
+    return {
+      is: is,
+      go: {
+        DiscoverCarousel: go('discover'),
+        DiscoverDetail: go('detail'),
+        Main: go('prep'),
+        Dashboard: go('dash'),
+        Timetable: go('tt'),
+        TimetableEdit: go('tte'),
+        Checklist: go('check'),
+        Playlist: go('playlist'),
+        RecordHome: go('record'),
+        RecordHomeNew: go('record'),
+        RecordEdit: go('reportEdit'),
+        RecordDetailPhoto: go('report')
+      },
+      prep: prep, disc: disc, det: det, dash: dash, tt: tt, tte: tte, chk: chk, pl: pl, rec: rec, red: red, rep: rep
+    };
+  }
+}
+</script>
+</body>
+</html>
